@@ -4,43 +4,9 @@
 (function(){
 'use strict';
 
-/* Sitemap — used to build the mobile section sheets */
-const SITEMAP = [
-  {
-    "key": "learn",
-    "label": "Learn",
-    "file": "learn.html",
-    "intro": "Plain-language guides to the biology of aging and the tools used to study it.",
-    "pages": [
-      {
-        "file": "discoveries.html",
-        "label": "Discoveries"
-      },
-      {
-        "file": "genes-pathways.html",
-        "label": "Genes & Pathways"
-      },
-      {
-        "file": "molecules.html",
-        "label": "Molecules"
-      },
-      {
-        "file": "technologies.html",
-        "label": "Technologies"
-      },
-      {
-        "file": "aging-topics.html",
-        "label": "Aging Topics"
-      }
-    ]
-  }
-];
-
 const $  = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-const here = document.body.dataset.page || 'index.html';
 
 /* ---------------- DNA helix (hero backgrounds) ---------------- */
 const NS = 'http://www.w3.org/2000/svg';
@@ -98,26 +64,7 @@ function closeModal(){ modal.classList.remove('open'); }
 $('#modalClose').addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
 
-/* ---------------- Mobile section sheet ---------------- */
-const sheet = $('#sheet'), backdrop = $('#sheetBackdrop');
-let sheetKey = null;
-function openSheet(key){
-  const s = SITEMAP.find(x=>x.key===key); if(!s) return;
-  sheetKey = key;
-  const links = [{file:s.file,label:'Overview'}, ...s.pages];
-  sheet.innerHTML = `<h4>${s.label}</h4><p class="muted">${s.intro}</p>
-    <div class="sheet-links">${links.map(p=>`<a href="${p.file}"${p.file===here?' class="current" aria-current="page"':''}>${p.label}<span>→</span></a>`).join('')}</div>`;
-  sheet.classList.add('open'); backdrop.classList.add('open');
-  $$('.bottom-nav .bn').forEach(b=>b.classList.toggle('open', b.dataset.key===key));
-}
-function closeSheet(){
-  sheetKey = null;
-  sheet.classList.remove('open'); backdrop.classList.remove('open');
-  $$('.bottom-nav .bn').forEach(b=>b.classList.remove('open'));
-}
-$$('.bottom-nav button.bn').forEach(b=>b.addEventListener('click', ()=> sheetKey===b.dataset.key ? closeSheet() : openSheet(b.dataset.key)));
-backdrop.addEventListener('click', closeSheet);
-document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeSheet(); closeModal(); } });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
 
 /* ---------------- View toggles (Research, Pioneers, About) ---------------- */
 $$('[data-toggle]').forEach(group=>{
