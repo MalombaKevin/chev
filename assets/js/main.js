@@ -7,46 +7,6 @@
 /* Sitemap — used to build the mobile section sheets */
 const SITEMAP = [
   {
-    "key": "research",
-    "label": "Research",
-    "file": "research.html",
-    "intro": "Where our science happens — the questions we ask, the studies we run and the results we share.",
-    "pages": [
-      {
-        "file": "research-areas.html",
-        "label": "Research Areas"
-      },
-      {
-        "file": "active-studies.html",
-        "label": "Active Studies"
-      },
-      {
-        "file": "publications.html",
-        "label": "Publications"
-      },
-      {
-        "file": "research-updates.html",
-        "label": "Research Updates"
-      }
-    ]
-  },
-  {
-    "key": "pioneers",
-    "label": "Pioneers",
-    "file": "pioneers.html",
-    "intro": "The scientists and institutions leading the effort to understand and slow aging.",
-    "pages": [
-      {
-        "file": "individuals.html",
-        "label": "Individuals"
-      },
-      {
-        "file": "institutions.html",
-        "label": "Institutions"
-      }
-    ]
-  },
-  {
     "key": "learn",
     "label": "Learn",
     "file": "learn.html",
@@ -71,30 +31,6 @@ const SITEMAP = [
       {
         "file": "aging-topics.html",
         "label": "Aging Topics"
-      }
-    ]
-  },
-  {
-    "key": "about",
-    "label": "About",
-    "file": "about.html",
-    "intro": "Who we are, who we work with, and how to reach us.",
-    "pages": [
-      {
-        "file": "mission.html",
-        "label": "Mission"
-      },
-      {
-        "file": "team.html",
-        "label": "Team"
-      },
-      {
-        "file": "partners.html",
-        "label": "Partners"
-      },
-      {
-        "file": "contact.html",
-        "label": "Contact"
       }
     ]
   }
@@ -183,7 +119,7 @@ $$('.bottom-nav button.bn').forEach(b=>b.addEventListener('click', ()=> sheetKey
 backdrop.addEventListener('click', closeSheet);
 document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeSheet(); closeModal(); } });
 
-/* ---------------- View toggles (Research, Pioneers) ---------------- */
+/* ---------------- View toggles (Research, Pioneers, About) ---------------- */
 $$('[data-toggle]').forEach(group=>{
   const btns = $$('[data-view]', group);
   const views = btns.map(b=>b.dataset.view);
@@ -200,9 +136,10 @@ $$('[data-toggle]').forEach(group=>{
     const n = btns[(i + (e.key==='ArrowRight'?1:btns.length-1)) % btns.length];
     n.focus(); n.click();
   });
-  // deep link: research.html#timeline, pioneers.html#institutions
-  const fromHash = location.hash.slice(1);
-  if(views.includes(fromHash)) show(fromHash, false);
+  // deep link: research.html#publications, pioneers.html#institutions
+  const fromHash = () => { const h = location.hash.slice(1); if(views.includes(h)) show(h, false); };
+  fromHash();
+  window.addEventListener('hashchange', fromHash);
 });
 
 /* ---------------- Active studies filter ---------------- */
@@ -228,7 +165,7 @@ if($('[data-pub-filter]')){
   [q,y,ty].forEach(el=>el.addEventListener('input', run));
 }
 
-/* ---------------- Search + card modals (individuals, institutions) ---------------- */
+/* ---------------- Search + card modals (Pioneers) ---------------- */
 $$('[data-search-input]').forEach(input=>{
   const scope = input.closest('section');
   input.addEventListener('input', ()=>{
